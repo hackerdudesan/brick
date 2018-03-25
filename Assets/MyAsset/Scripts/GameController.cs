@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    public GameObject brick1;
+    public GameObject brick2;
+    public GameObject brick3;
+
     int balls_left;
     int score;
     bool isDemoMode;
@@ -24,6 +28,8 @@ public class GameController : MonoBehaviour
         ballText = GameObject.Find("ballsText").GetComponent<Text>();
         scoreText = GameObject.Find("scoreText").GetComponent<Text>();
         ball = GameObject.Find("ball").GetComponent<Ball>();
+
+        SetupBricks(1);
     }
 
     // Update is called once per frame
@@ -99,11 +105,54 @@ public class GameController : MonoBehaviour
         messageText.text = "Game Start";
         countsToClearMessage = 60;
         nextMessage = "";
+        ClearAllBricks();
+        SetupBricks( 1 );
     }
 
     private void GameOver()
     {
         isDemoMode = true;
         messageText.text = "Game Over";
+    }
+
+    private void ClearAllBricks()
+    {
+        GameObject[] bricks;
+        bricks = GameObject.FindGameObjectsWithTag("IsBrick");
+        foreach ( GameObject obj in bricks){
+            Destroy(obj);
+        }
+    }
+
+    private void SetupBricks(int level)
+    {
+        for (int y = 0; y < 6; y++)
+        {
+            for (int x = 0; x < 11; x++)
+            {
+                GameObject prefab;
+                switch (y)
+                {
+                    case 0:
+                    case 1:
+                        prefab = brick1;
+                        break;
+                    case 2:
+                    case 3:
+                        prefab = brick2;
+                        break;
+                    case 4:
+                    case 5:
+                        prefab = brick3;
+                        break;
+                    default:
+                        prefab = brick1;
+                        break;
+
+                }
+                Instantiate(prefab, new Vector3((float)x * 7.0f/ 5.0f - 7.0f, (float)y* 0.5f + 2.0f, -1.0f), Quaternion.identity);
+            }
+        }
+
     }
 }
